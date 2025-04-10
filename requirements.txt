@@ -1,0 +1,11 @@
+requests
+beautifulsoup4
+lxml
+pandas
+streamlit
+langchain
+langchain-google-genai
+langchain-community
+langchain-tavily
+langchainhub
+google-generativeai
