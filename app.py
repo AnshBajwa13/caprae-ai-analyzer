@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import os
 import time
+import re
 from urllib.parse import urlparse 
 try:
     from scraper import run_scraping_only, get_agent_answer
@@ -18,18 +19,39 @@ def get_clean_company_name(title, url):
     """Attempts to extract a cleaner company name from the page title."""
     if title and title != 'N/A':
         try:
-            name = title.split('|')[0].split('–')[0].split(':')[0]
-            parts = name.split(' - ')
-            name = parts[0] if len(parts) > 1 and len(parts[0]) > 3 else name
-            common_suffixes = [' Inc.', ' LLC', ' Ltd.', ' Corp.', ' Corporation', ' Limited', ' GmbH', ' PLC', '.com', '.org', '.net']
-            for suffix in common_suffixes: name = name.replace(suffix, '')
-            name = name.replace('Home', '').strip()
-            if len(name) > 2: return name.strip()
-        except Exception: pass
+            # Split by common separators like |, –, -, :
+            # Prioritize splitting by | first as it often separates name from slogan
+            potential_names = re.split(r' \| | – | - | : ', title)
+
+            # Filter out generic terms and very short parts
+            generic_terms = ['home', 'welcome', 'official site', 'website', 'log in', 'login']
+            significant_parts = [
+                p.strip() for p in potential_names
+                if p.strip().lower() not in generic_terms and len(p.strip()) > 3
+            ]
+
+            if significant_parts:
+                # Often the first significant part is the name, but sometimes it's the last
+                # Let's return the first one for now, but this could be refined further
+                name = significant_parts[0]
+                # Remove common legal suffixes AFTER selecting the part
+                common_suffixes = [' Inc.', ' LLC', ' Ltd.', ' Corp.', ' Corporation', ' Limited', ' GmbH', ' PLC', '.com', '.org', '.net']
+                for suffix in common_suffixes: name = name.replace(suffix, '')
+                return name.strip() # Return the cleaned significant part
+
+        except Exception as e:
+             print(f"Error cleaning title: {e}") # Log error if cleaning fails
+
+    # Fallback: Use formatted domain name if title cleaning failed or title was bad
     try:
-        domain = urlparse(url).netloc.replace('www.', '').split('.')[0]
-        return domain.replace('-', ' ').title()
-    except: return url # Fallback
+        domain = urlparse(url).netloc.replace('www.', '')
+        # Take only the main part before the TLD (e.g., 'tower-research' from 'tower-research.com')
+        domain_part = domain.split('.')[0]
+        # Format it nicely
+        return domain_part.replace('-', ' ').title()
+    except:
+        return url # Absolute fallback is the original URL
+
 
 # --- Page Configuration ---
 st.set_page_config(page_title="AI Website Analyzer", page_icon="🔍", layout="wide")
