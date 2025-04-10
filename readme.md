@@ -19,7 +19,7 @@ This tool was developed as part of the pre-work assignment for the Caprae Capita
     * Scraped website text as primary context.
     * Tavily web search as a fallback or for external/recent information.
     * Attempts to cite source (Context vs. Web Search).
-* **Interactive UI:** Built with Streamlit, offering two modes:
+* **Interactive UI:** nteractive Streamlit UI with two modes:
     * *Analyze & Show Details:* Displays all scraped data + AI Summary first, then allows AI Q&A.
     * *Ask AI Question Directly:* Scrapes context in the background and goes straight to AI Q&A.
 * **Clickable Links:** Emails (`mailto:`) and Social Media links are clickable in the UI.
@@ -91,7 +91,7 @@ This tool was developed as part of the pre-work assignment for the Caprae Capita
     streamlit run app.py
     ```
 3.  The application will open in your web browser.
-4.  Enter a target website URL (e.g., `https://tower-research.com/`).
+4.  Enter a target website URL (e.g., `https://www.capraecapital.com/`).
 5.  Choose either "Analyze & Show Scraped Details" or "Ask AI Question Directly".
 6.  Interact with the results or the AI Agent Q&A section.
 
@@ -99,9 +99,9 @@ This tool was developed as part of the pre-work assignment for the Caprae Capita
 
 * Web scraping may fail on websites heavily reliant on JavaScript for rendering content or those with strong anti-scraping protections (like Cloudflare).
 * The quality of extracted text (`about_text`) varies depending on website structure; the AI Summary and Agent answers depend on this quality.
-* The AI Agent's performance depends on the LLM (Gemini Pro), the quality of Tavily search results, and the complexity of the question. Answers may occasionally be inaccurate, incomplete, or fail safety checks.
+* The AI Agent's performance depends on the LLM (eg.I used Gemini-2.0-flash), the quality of Tavily search results, and the complexity of the question. Answers may occasionally be inaccurate, incomplete, or fail safety checks.
 * Source citation by the AI Agent is experimental and may not always be accurate or comprehensive.
-* The Q&A feature is single-turn per query (it doesn't maintain conversational memory across multiple separate clicks of the "Ask AI Agent" button *after the page reruns*). [NOTE: We removed the complex history feature].
+* The Q&A feature is single-turn per query (it doesn't maintain conversational memory across multiple separate clicks of the "Ask AI Agent" button *after the page reruns*). [NOTE: Earlier I attached history feature , now removed the complex history feature].
 * Requires users to provide their own API keys. Free tier limits for APIs may apply.
 
 ## Future Improvements (Optional)
